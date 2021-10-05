@@ -1,4 +1,4 @@
-﻿#include <cstdlib>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <locale>
@@ -7,70 +7,73 @@
 #include <vector>
 #include <iomanip>
 #include <algorithm>
-const std::string alphabet_eng = "abcdefghijklmnopqrstuvwxyz";
+
+using namespace std;
+
+const string alphabet_eng = "abcdefghijklmnopqrstuvwxyz";
 const size_t n_eng = alphabet_eng.size();
-std::vector<std::string> read_file(std::string file_name)
+vector<string> read_file(string file_name)
 {
-    std::vector<std::string> text;
-    std::string temp;
-    std::ifstream ist(file_name, std::ios::in | std::ios::binary);
+    vector<string> text;
+    string temp;
+    ifstream ist(file_name, ios::in | ios::binary);
     if (!ist) {
-        std::cout << "cant open the file with this name! return to menu..." << std::endl;
+        cout << "cant open the file with this name! return to menu..." << endl;
     }
     else {
         while (!ist.eof()) {
-            std::getline(ist, temp);
+            getline(ist, temp);
             text.push_back(temp);
         }
-        std::cout << "file has been successfully read" << std::endl;
+        cout << "file has been successfully read" << endl;
     }
-    ist.close(); //Закрываем файл
+    ist.close();
     return text;
 }
 
-void write_file(std::string file_name, std::vector<std::string> text)
+void write_file(string file_name, vector<string> text)
 {
-    std::string temp;
-    std::ofstream ost(file_name, std::ios::in | std::ios::binary);
+    string temp;
+    ofstream ost(file_name, ios::in | ios::binary);
     if (!ost) {
-        std::cout << "cant open the file with this name" << std::endl;
+        cout << "cant open the file with this name" << endl;
     }
     else {
         for (size_t i = 0; i < text.size(); i++) {
-            ost << text[i] << std::endl;
+            ost << text[i] << endl;
         }
-        std::cout << "file has been successfully writed" << std::endl;
+        cout << "file has been successfully writed" << endl;
     }
     ost.close(); //Закрываем файл
 }
 
-void print_text(std::vector<std::string> text)
+void print_text(vector<string> text)
 {
     for (size_t i = 0; i < text.size(); i++) {
-        std::cout << text[i] << std::endl;
+        cout << text[i] << endl;
     }
 }
 
-std::vector<std::string> encrypt(std::vector<std::string> text, size_t k)
+vector<string> encrypt(vector<string> word, size_t k)
 {
     k %= n_eng;
-    std::string txt;
-    for (size_t i = 0; i < text.size(); ++i) {
-        txt = text[i];
-        for (size_t j = 0; j < txt.length(); ++j) {
-            if (isprint((unsigned char)txt[j])) {
-                txt[j] = alphabet_eng[(alphabet_eng.find(txt[j]) + k) % n_eng];
+    string wrd;
+    for (size_t i = 0; i < word.size(); ++i) {
+        wrd = word[i];
+        for (size_t j = 0; j < wrd.length(); ++j) {
+            if (isprint((unsigned char)wrd[j])) {
+                wrd[j] = alphabet_eng[(alphabet_eng.find(wrd[j]) + k) % n_eng];
             }
         }
-        text[i] = txt;
+        word[i] = wrd;
     }
-    return text;
+    return word;
 }
 
-std::vector<std::string> decrypt(std::vector<std::string> text, size_t k)
+vector<string> decrypt(vector<string> text, size_t k)
 {
     k %= n_eng;
-    std::string txt;
+    string txt;
     for (size_t i = 0; i < text.size(); ++i) {
         txt = text[i];
         for (size_t j = 0; j < txt.length(); ++j) {
@@ -83,11 +86,11 @@ std::vector<std::string> decrypt(std::vector<std::string> text, size_t k)
     return text;
 }
 
-std::vector<double> frequency_analysis(std::vector<std::string> text)
+vector<double> frequency_analysis(vector<string> text)
 {
-    std::vector<double> counters(26);
+    vector<double> counters(26);
     int count = 0;
-    std::string txt;
+    string txt;
     for (size_t i = 0; i < text.size(); i++) {
         txt = text[i];
         for (size_t j = 0; j < txt.length(); ++j) {
@@ -100,40 +103,40 @@ std::vector<double> frequency_analysis(std::vector<std::string> text)
         }
 
     }
-    std::cout << "frequency analyse complete" << std::endl;
-    std::ofstream ost("graph.txt");
-    std::locale mylocale("");
+    cout << "frequency analyse complete" << endl;
+    ofstream ost("frequency.txt");
+    locale mylocale("");
     ost.imbue(mylocale);
     if (!ost) {
-        std::cout << "cant open the file with this name" << std::endl;
+        cout << "cant open the file with this name" << endl;
     }
     else {
         for (size_t i = 0; i < counters.size(); i++) {
             counters[i] = counters[i] / count * 100;
-            ost << std::setprecision(2) << std::fixed << counters[i] << std::endl;
+            ost << setprecision(2) << fixed << counters[i] << endl;
         }
-        std::cout << "file has been successfully writed" << std::endl;
+        cout << "file has been successfully writed" << endl;
     }
     ost.close();
     return counters;
 }
 void showmenu()
 {
-    std::cout << "Menu : " << std::endl;
-    std::cout << "1 - Open file\n";
-    std::cout << "2 - Write text from file\n";
-    std::cout << "3 - Crypt file\n";
-    std::cout << "4 - Decrypt file\n";
-    std::cout << "5 - Frequency analysis\n";
-    std::cout << "0 - Exit\n";
-    std::cout << std::endl;
+    cout << "Menu : " << endl;
+    cout << "1 - Open file\n";
+    cout << "2 - Write text from file\n";
+    cout << "3 - Crypt file\n";
+    cout << "4 - Decrypt file\n";
+    cout << "5 - Frequency analysis\n";
+    cout << "0 - Exit\n";
+    cout << endl;
 }
 
 int main()
 {
     setlocale(LC_ALL, "");
     size_t k = 0;
-    std::vector<std::string> text;  //текст считанный из файла
+    vector<string> text;  //текст считанный из файла
     bool prisn;
     prisn = true;
     do
@@ -144,15 +147,15 @@ int main()
         {
         case '1':   //open file to string
         {
-            std::cout << "write a file name" << std::endl;
-            std::string file_name;
-            std::cin >> file_name;
+            cout << "write a file name" << endl;
+            string file_name;
+            cin >> file_name;
             text = read_file(file_name);
             break;
         };
         case '2':   //crypted string
         {
-            if (text.size() == 0) { std::cout << "text is empty! return to menu..." << std::endl; }
+            if (text.size() == 0) { cout << "text is empty! return to menu..." << endl; }
             else {
                 print_text(text);
             }
@@ -160,31 +163,31 @@ int main()
         };
         case '3':   //crypted string
         {
-            if (text.size() == 0) { std::cout << "text is empty! return to menu..." << std::endl; }
+            if (text.size() == 0) { cout << "text is empty! return to menu..." << endl; }
             else {
-                std::cout << "write key:" << std::endl;
-                std::cin >> k;
-                std::string file_name = "crypt.txt";
+                cout << "write key:" << endl;
+                cin >> k;
+                string file_name = "crypt.txt";
                 write_file(file_name, encrypt(text, k));
-                std::cout << "text crypted" << std::endl;
+                cout << "text crypted" << endl;
             }
             break;
         };
         case '4':   //decrypted string
         {
-            if (text.size() == 0) { std::cout << "text is empty! return to menu..." << std::endl; }
+            if (text.size() == 0) { cout << "text is empty! return to menu..." << endl; }
             else {
-                std::cout << "write key:" << std::endl;
-                std::cin >> k;
-                std::string file_name = "decrypt.txt";
+                cout << "write key:" << endl;
+                cin >> k;
+                string file_name = "decrypt.txt";
                 write_file(file_name, decrypt(text, k));
-                std::cout << "text decrypted" << std::endl;
+                cout << "text decrypted" << endl;
             }
             break;
         };
         case '5':   //frequency analysis
         {
-            if (text.size() == 0) { std::cout << "text is empty! return to menu..." << std::endl; }
+            if (text.size() == 0) {cout << "text is empty! return to menu..." << endl; }
             else {
                 frequency_analysis(text);
             }
@@ -197,11 +200,11 @@ int main()
         }
         default:
         {
-            std::cout << "Wrong input!" << std::endl;
+          cout << "Wrong input!" <<endl;
             break;
         }
         }
-        std::cout << std::endl << std::endl;
+       cout << endl << endl;
         system("pause");
     } while (prisn);
     return 0;
